@@ -1,0 +1,13 @@
+### create category - post method
+POST http://localhost:8000/api/lead
+Content-Type: application/json
+
+{
+   "amount":2000,
+   "price":40
+}
+
+### get category list - get method
+GET http://localhost:8000/api/lead
+Content-Type: application/json
+

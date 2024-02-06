@@ -5,6 +5,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from
 import Collapsible from 'react-native-collapsible';
 import { COLOR } from '../../utils/color';
 import { FONTS } from '../../utils/fontFamily';
+import Feather from 'react-native-vector-icons/Feather'
 
 const Dropdown = ({ options, onSelect, value, style, current, showDropdown, setShowDropdown }) => {
 
@@ -14,13 +15,15 @@ const Dropdown = ({ options, onSelect, value, style, current, showDropdown, setS
     };
 
     return (
-       
+
         <View style={[styles.container, style]}>
-            {/* <TouchableOpacity onPress={() => { showDropdown === current ? setShowDropdown(false) : setShowDropdown(current) }} style={styles.header}>
-                <Text style={styles.headerText}>{value}</Text>
-            </TouchableOpacity> */}
-            <View style={{flexDirection:'row',width:wp(70),alignItems:'center'}}>
-                <Text></Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                <View style={styles.optionTextBox}>
+                    <Text style={{ color: COLOR.white, letterSpacing: wp(.3), fontSize: hp(1.7), fontFamily: FONTS.NunitoMedium }}>{value}</Text>
+                </View>
+                <TouchableOpacity onPress={() => { showDropdown === current ? setShowDropdown(false) : setShowDropdown(current) }} style={styles.downArrowBtn}>
+                    <Feather name='chevron-down' size={hp(2.8)} color={COLOR.black} />
+                </TouchableOpacity>
             </View>
 
             <Collapsible collapsed={!(showDropdown === current)}>
@@ -34,8 +37,9 @@ const Dropdown = ({ options, onSelect, value, style, current, showDropdown, setS
                     >
                         {
                             options.map((item, index) => (
-                                <TouchableOpacity key={index} onPress={() => handleSelect(item)} style={styles.option}>
-                                    <Text style={styles.optionText}>{item.label}</Text>
+                                <TouchableOpacity key={index} onPress={() => handleSelect(item)} style={[styles.option,]}>
+                                    <Text style={styles.optionText}>{item.label} Leads</Text>
+                                    <Text style={styles.optionText}>{item?.label} $</Text>
                                 </TouchableOpacity>
                             ))
                         }
@@ -57,6 +61,8 @@ const styles = StyleSheet.create({
         borderColor: COLOR.borderGrey,
         height: hp(6.4)
     },
+    optionTextBox: { backgroundColor: COLOR.black30, paddingHorizontal: wp(3), height: hp(5.3), flexGrow: 1, justifyContent: 'center' },
+    downArrowBtn: { backgroundColor: COLOR.white, paddingHorizontal: wp(3.2), height: hp(5.3), justifyContent: 'center' },
     dropdownContainer: {
         maxHeight: hp(20), // Set the maximum height for the dropdown container
         borderColor: COLOR.borderGrey,
@@ -70,14 +76,24 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.white,
 
     },
-    optionBox:{ height: hp(20) ,borderWidth:hp(.12),borderColor:COLOR.borderGrey },
+    optionBox: {
+        height: hp(20), borderTopWidth: 0,
+        // borderWidth: wp(.1),
+        //  borderColor: COLOR.white ,
+        // backgroundColor: COLOR.black30,
+    },
     option: {
-        padding: hp(1.7),
-        borderColor: COLOR.borderGrey,
-        borderWidth: hp(.17),
+        padding: hp(1.5),
+        // borderColor: COLOR.white,
+        // borderWidth: hp(.1),
         borderTopWidth: 0,
-        borderLeftWidth:0,
-        borderRightWidth:0
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: hp(.2),
+        backgroundColor: COLOR.black30,
     },
     headerText: {
         fontSize: hp(1.68),
@@ -86,7 +102,7 @@ const styles = StyleSheet.create({
         fontFamily: FONTS.NunitoMedium, textAlignVertical: 'center'
     },
     optionText: {
-        color: COLOR.textGrey,
+        color: COLOR.white,
         fontSize: hp(1.9),
         letterSpacing: wp(.2),
         fontFamily: FONTS.NunitoRegular

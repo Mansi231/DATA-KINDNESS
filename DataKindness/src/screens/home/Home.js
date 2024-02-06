@@ -1,4 +1,4 @@
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
@@ -18,14 +18,16 @@ const Home = () => {
           width: '100%',
         }}
       />
-      <View style={styles.container}>
-       <Header text={`Precision driven ${'\n'} lead generation`}/>
-        <View style={styles.box}>
-          <Text style={[styles.text,styles?.underLineText]}>Visit website</Text>
-          <Text style={[styles.text,styles?.underLineText]}>buy leads</Text>
-          <Text style={[styles.text,styles?.underLineText]}>buy membership</Text>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <Header text={`Precision driven ${'\n'} lead generation`} />
+          <View style={styles.box}>
+            <Text style={[styles.text, styles?.underLineText]}>Visit website</Text>
+            <Text style={[styles.text, styles?.underLineText]}>buy leads</Text>
+            <Text style={[styles.text, styles?.underLineText]}>buy membership</Text>
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     </ImageBackground>
   )
 }
@@ -40,12 +42,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: hp(3),
     backgroundColor: 'transparent',
-    gap: hp(15),paddingHorizontal:wp(5)
+    gap: hp(15), paddingHorizontal: wp(5)
   },
-  box:{ justifyContent:'center',alignItems:'center',flexDirection:'column',gap:hp(2)},
+  box: { justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: hp(2) },
   logo: {
     height: hp(15), width: hp(15)
   },
-  text: { fontSize: hp(2.1), color: COLOR.white, textTransform: 'uppercase', letterSpacing: wp(.2),lineHeight:hp(3) ,fontFamily:FONTS.NunitoBold},
-  underLineText:{textDecorationStyle:'solid',textDecorationColor:COLOR.white,textDecorationLine:'underline',fontWeight:'bold',fontSize:hp(3),lineHeight:hp(4)}
+  text: { fontSize: hp(2.1), color: COLOR.white, textTransform: 'uppercase', letterSpacing: wp(.2), lineHeight: hp(3), fontFamily: FONTS.NunitoBold },
+  underLineText: { textDecorationStyle: 'solid', textDecorationColor: COLOR.white, textDecorationLine: 'underline', fontWeight: 'bold', fontSize: hp(3), lineHeight: hp(4) }
 })

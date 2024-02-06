@@ -16,7 +16,8 @@ export const COLOR = {
     lightGrey70: 'rgba(128, 128, 127, 0.70)',
     blue: '#387ed1',
     lightBlue10: 'rgba(227, 238, 255, 1)',
-    sepratorGrey: '#ACACAC'
+    sepratorGrey: '#ACACAC',
+    black30:'rgba(0, 0, 0, 0.3)',
   
   };
   

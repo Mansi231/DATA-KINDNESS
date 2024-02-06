@@ -6,13 +6,15 @@ import { hasNotch } from 'react-native-device-info';
 import { COLOR } from './src/utils/color'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from './pixel/index';
 import MainStackNavigator from './src/navigation/navigation'
+import Context from './src/context/Context';
 
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-    
+    // <SafeAreaView style={{ flex: 1 }}>
+    <Context>
       <MainStackNavigator />
-    </SafeAreaView>
+    </Context>
+    // </SafeAreaView>
   )
 }
 

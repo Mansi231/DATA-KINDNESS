@@ -1,15 +1,15 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { heightPercentageToDP as hp , widthPercentageToDP as wp } from '../../../pixel'
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { FONTS } from '../../utils/fontFamily'
 import { COLOR } from '../../utils/color'
 import logo from '../../assets/logo_transparent.png'
 
-const Header = ({text}) => {
+const Header = ({ text }) => {
     return (
         <View style={styles.box}>
             <Image source={logo} style={styles.logo} />
-            <Text style={styles.text}>{text}</Text>
+            {text && <Text style={styles.text}>{text}</Text>}
         </View>
     )
 }
@@ -17,7 +17,7 @@ const Header = ({text}) => {
 export default Header
 
 const styles = StyleSheet.create({
-    box: { justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: hp(2) },
+    box: { justifyContent: 'center', alignItems: 'center', flexDirection: 'column', gap: hp(1),height:'auto'},
     logo: {
         height: hp(15), width: hp(15)
     },

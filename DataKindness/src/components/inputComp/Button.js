@@ -4,9 +4,9 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp } from '../../..
 import { COLOR } from '../../utils/color'
 import { FONTS } from '../../utils/fontFamily'
 
-const Button = ({text}) => {
+const Button = ({text,style}) => {
   return (
-    <TouchableOpacity style={styles.btn}>
+    <TouchableOpacity style={[styles.btn,style]}>
       <Text style={styles.btnText}>{text}</Text>
     </TouchableOpacity>
   )

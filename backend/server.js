@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'; // Import the cors middleware
 import categoryRoute from './routes/categoryRoute.js'
 import leadRoute from './routes/LeadRoute.js'
+import userRoute from './routes/UserRoute.js'
 
 const server = express();
 let PORT = process.env.PORT || 8000
@@ -15,6 +16,7 @@ server.use(express.urlencoded({ extended: true }));
 
 server.use('/api/category', categoryRoute)
 server.use('/api/lead', leadRoute)
+server.use('/api/user', userRoute)
 
 mongoose.connect(process.env.MONGODB_URI, { autoIndex: true, dbName: 'DataKindness' }).then((res) => console.log('database connection successfull')).catch((err) => console.log(`error in database connection : ${err}`))
 

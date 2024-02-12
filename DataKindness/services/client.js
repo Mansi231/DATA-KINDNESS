@@ -1,6 +1,8 @@
 import axios from 'axios'
+import {BASE_URL} from "@env"
 
-let base_url = process.env?.BASE_URL
+// let base_url = process.env?.BASE_URL
+let base_url = BASE_URL
 
 export const client = axios.create({
   baseURL: base_url,
@@ -16,8 +18,7 @@ client.interceptors.request.use((config) => {
   if (config.data instanceof FormData) {
     config.headers['Content-Type'] = 'multipart/form-data';
   } else {
-    config.headers['Content-Type'] = 'application/json';
+    config.headers['content-type'] = 'application/json';
   }
-
   return config;
 });

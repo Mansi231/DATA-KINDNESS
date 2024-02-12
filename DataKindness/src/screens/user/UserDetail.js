@@ -1,5 +1,6 @@
-import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, KeyboardAvoidingView, ScrollView ,Platform} from 'react-native'
-import React, { useState } from 'react'
+import Toast from 'react-native-toast-message';
+import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native'
+import React, { useContext, useState } from 'react'
 import { hasNotch } from 'react-native-device-info';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
@@ -10,18 +11,54 @@ import TextInput from '../../components/inputComp/TextInput';
 import Dropdown from '../../components/inputComp/DropDown';
 import Button from '../../components/inputComp/Button';
 import BackAerrow from '../../components/common/BackAerrow';
+import { ValContext } from '../../context/Context';
+import { client } from '../../../services/client';
 
-const UserDetail = () => {
+const UserDetail = ({ navigation }) => {
 
-    const [detail, setDetail] = useState({ name: '', email: '', number: '', category: {}, website: '' })
+    const { businessCategoryList, leadData, setLeadData, } = useContext(ValContext)
+
+    let { userDetail } = leadData
+
+    const [detail, setDetail] = useState(userDetail ? userDetail : { name: '', email: '', number: '', category: null, website: '' })
     const [showDropdown, setShowDropdown] = useState(false);
 
-    let options = [
-        { amount: 200, price: 10, label: 200 },
-        { amount: 200, price: 10, label: 200 },
-        { amount: 200, price: 10, label: 200 },
-        { amount: 200, price: 10, label: 200 },
-    ]
+    const handleNavigation = () => {
+        let { name, email, number, category, website } = detail
+        if (!name || !email || !number || !category || !website) {
+            Toast.show({
+                type: 'error',
+                text1: `Fill all the fields.`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            });
+        }
+        else {
+            setLeadData({ ...leadData, userDetail: detail })
+
+            client.post(`user/addUser`, detail).then((res) => {
+                Toast.show({
+                    type: 'success',
+                    text1: `Saved Successfully !`,
+                    visibilityTime: 3000,
+                    swipeable: true,
+                    text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                    topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                });
+            }).catch((err) => {
+                Toast.show({
+                    type: 'error',
+                    text1: `${err?.response?.data?.error}`,
+                    visibilityTime: 3000,
+                    swipeable: true,
+                    text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                    topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                });
+            })
+        }
+    }
 
     return (
         <ImageBackground source={blurBg} style={{ flex: 1, width: '100%' }} resizeMode='cover'>
@@ -44,7 +81,7 @@ const UserDetail = () => {
                         <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
                             <Text style={styles.queText}>Please enter following details</Text>
                             <View style={{ width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: hp(1) }}>
-                                
+
                                 <TextInput
                                     onFocus={() => { }}
                                     style={[styles?.datePickerViewStyle]}
@@ -91,15 +128,17 @@ const UserDetail = () => {
                                     onBlur={() => { }}
                                 />
                                 <Dropdown
-                                    showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedCategory'} style={{ width: 'auto' }} options={options} onSelect={(item) => {
+                                    showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedCategory'} style={{ width: 'auto' }} options={businessCategoryList} onSelect={(item) => {
                                         setDetail({ ...detail, category: item })
-                                    }} value={detail?.category?.label || 'Select'}
+                                    }} value={detail?.category?.label || 'Select Business Category'}
                                 />
-                                <Button text={'Submit'} style={{ marginTop: hp(3) }} />
+                                <Button text={'Submit'} style={{ marginTop: hp(3) }} onPress={handleNavigation} />
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
-                    <BackAerrow />
+                    <Toast position='top' />
+
+                    <BackAerrow onPress={() => navigation.goBack()} />
 
                 </View>
             </SafeAreaView>
@@ -119,7 +158,7 @@ const styles = StyleSheet.create({
         paddingVertical: hp(3),
         paddingHorizontal: wp(5), gap: hp(2), flexDirection: 'column'
     },
-    queText: { color: COLOR.white, fontSize: hp(1.8), letterSpacing: wp(.2), fontFamily: FONTS.NunitoMedium, marginVertical: hp(2.5) ,textAlign:'center'},
+    queText: { color: COLOR.white, fontSize: hp(1.8), letterSpacing: wp(.2), fontFamily: FONTS.NunitoMedium, marginVertical: hp(2.5), textAlign: 'center' },
     datePickerViewStyle: {
         alignItems: 'center', flexDirection: 'row', width: '100%'
     },

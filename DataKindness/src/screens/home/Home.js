@@ -1,19 +1,19 @@
-import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import {ImageBackground, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
 import blurBg from '../../assets/blur_bg.jpg'
-import logo from '../../assets/logo_transparent.png'
 import { hasNotch } from 'react-native-device-info';
 import { FONTS } from '../../utils/fontFamily'
 import Header from '../../components/common/Header'
+import { ROUTES } from '../../../services/routes'
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
     <ImageBackground source={blurBg} style={{ flex: 1, width: '100%' }} resizeMode='cover'>
       <View
         style={{
-          height: hasNotch() ? hp(6) : 0,
+          height: hasNotch() ? hp(6) : hp(3),
           backgroundColor: 'transparent',
           width: '100%',
         }}
@@ -23,7 +23,7 @@ const Home = () => {
           <Header text={`Precision driven ${'\n'} lead generation`} />
           <View style={styles.box}>
             <Text style={[styles.text, styles?.underLineText]}>Visit website</Text>
-            <Text style={[styles.text, styles?.underLineText]}>buy leads</Text>
+            <Text style={[styles.text, styles?.underLineText]} onPress={()=>navigation.navigate(ROUTES.LEAD)}>buy leads</Text>
             <Text style={[styles.text, styles?.underLineText]}>buy membership</Text>
           </View>
         </View>

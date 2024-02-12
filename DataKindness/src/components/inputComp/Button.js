@@ -1,20 +1,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { widthPercentageToDP as wp , heightPercentageToDP as hp } from '../../../pixel'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
 import { FONTS } from '../../utils/fontFamily'
+import { PaperProvider } from 'react-native-paper';
+import { Button as PressableButton, DefaultTheme } from 'react-native-paper';
 
-const Button = ({text,style}) => {
+const Button = ({ text, style , onPress }) => {
   return (
-    <TouchableOpacity style={[styles.btn,style]}>
-      <Text style={styles.btnText}>{text}</Text>
-    </TouchableOpacity>
+    <PaperProvider theme={{ ...DefaultTheme, roundness: 0, }} >
+      <PressableButton  style={[style]} mode="contained" onPress={onPress} buttonColor={COLOR.white} textColor={COLOR.black}>
+        {text}
+      </PressableButton>
+    </PaperProvider>
   )
 }
 
 export default Button
-
-const styles = StyleSheet.create({
-    btn:{paddingHorizontal:wp(10),paddingVertical:hp(1.2),backgroundColor:COLOR.white},
-    btnText:{color:COLOR.black,fontSize:hp(2.1),fontFamily:FONTS.NunitoMedium,letterSpacing:wp(.1)}
-})

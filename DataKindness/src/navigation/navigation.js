@@ -14,6 +14,7 @@ import OrderSummary from '../screens/order/OrderSummary';
 const Stack = createNativeStackNavigator();
 
 const Navigation = ({ navigation }) => {
+
     const navigationRef = useRef();
 
     return (
@@ -25,16 +26,17 @@ const Navigation = ({ navigation }) => {
                     options={{ headerShown: false }}
                 /> */}
 
-                {/* <Stack.Screen
+                <Stack.Screen
                     name={ROUTES.LEAD}
                     component={Lead}
                     options={{ headerShown: false }}
-                /> */}
-                {/* <Stack.Screen
+                />
+
+                <Stack.Screen
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                /> */}
+                />
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

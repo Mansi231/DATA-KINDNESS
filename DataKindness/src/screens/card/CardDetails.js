@@ -26,7 +26,7 @@ const CardDetails = () => {
             <StatusBar translucent barStyle={'light-content'} backgroundColor={'transparent'} />
             <View
                 style={{
-                    height: hasNotch() ? hp(6) : 0,
+                    height: hasNotch() ? hp(5) : hp(3),
                     backgroundColor: 'transparent',
                     width: '100%',
                 }}

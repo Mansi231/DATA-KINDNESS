@@ -4,6 +4,11 @@ module.exports = {
     "envName": "APP_ENV",
     "moduleName": "@env",
     "path": ".env",
+    "allowUndefined": true,
   }]],
-
+  env: {
+    production: {
+      plugins: ['react-native-paper/babel'],
+    },
+  },
 };

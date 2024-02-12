@@ -38,8 +38,8 @@ const Dropdown = ({ options, onSelect, value, style, current, showDropdown, setS
                         {
                             options.map((item, index) => (
                                 <TouchableOpacity key={index} onPress={() => handleSelect(item)} style={[styles.option,]}>
-                                    <Text style={styles.optionText}>{item.label} Leads</Text>
-                                    <Text style={styles.optionText}>{item?.label} $</Text>
+                                    <Text style={styles.optionText}>{item.label} {current == 'selectedCategory' ? null : 'Leads'}</Text>
+                                    {current == 'selectedLead' && <Text style={styles.optionText}>{item?.label} $</Text>}
                                 </TouchableOpacity>
                             ))
                         }

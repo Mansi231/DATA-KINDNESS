@@ -4,9 +4,9 @@ import Feather from 'react-native-vector-icons/Feather'
 import { COLOR } from '../../utils/color'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from '../../../pixel'
 
-const BackAerrow = () => {
+const BackAerrow = ({onPress}) => {
     return (
-        <Feather name='arrow-left' size={hp(4)} color={COLOR.white} style={{ alignSelf: "flex-start" }} />
+        <Feather name='arrow-left' size={hp(4)} color={COLOR.white} style={{ alignSelf: "flex-start" }} onPress={onPress}/>
     )
 }
 

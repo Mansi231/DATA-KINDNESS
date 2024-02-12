@@ -7,7 +7,21 @@ Content-Type: application/json
    "price":40
 }
 
-### get category list - get method
+### get lead list - get method
 GET http://localhost:8000/api/lead
 Content-Type: application/json
 
+### get category list - get method
+GET http://localhost:8000/api/category
+Content-Type: application/json
+
+### add user - post method
+POST http://localhost:8000/api/user/addUser
+Content-Type: application/json
+
+{
+   "name":"mansi",
+   "email":"mansi@gmail.com",
+   "number":"926551",
+   "website":"https://github.com/Mansi231/PYTHON-SQUARE"
+}

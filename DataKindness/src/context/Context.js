@@ -1,18 +1,32 @@
-import React,{useEffect,createContext,useState} from 'react'
+import React, { useEffect, createContext, useState } from 'react'
 import { client } from '../../services/client';
+import { Platform } from 'react-native'
 
 export const ValContext = createContext();
 
-const Context = ({children}) => {
+const Context = ({ children }) => {
 
     const [leadList, setLeadList] = useState([])
+    const [businessCategoryList, setBusinessCategoryList] = useState([])
+
+    // leadData:{selectedLead,userDetail}
+    const [leadData,setLeadData] = useState(null)
+    const [userDetail,setUserDetail] = useState(null)
 
     useEffect(() => {
-        client.get(`lead`).then((res)=>{console.log(res,':: res ::')}).catch((err)=>{console.log(err,':: err ::')})
+        Promise.all([client.get('lead'), client.get('category')])
+            .then(([leadRes, categoryRes]) => {
+                setLeadList(leadRes?.data?.data || []);
+                setBusinessCategoryList(categoryRes?.data?.data || []);
+            })
+            .catch((err) => {
+                console.log(err, ':: err ::');
+            });
     }, [])
 
+
     return (
-        <ValContext.Provider value={{ leadList, setLeadList }}>{children}</ValContext.Provider>
+        <ValContext.Provider value={{ leadList, setLeadList,businessCategoryList, setBusinessCategoryList , leadData,setLeadData ,userDetail,setUserDetail}}>{children}</ValContext.Provider>
     )
 }
 

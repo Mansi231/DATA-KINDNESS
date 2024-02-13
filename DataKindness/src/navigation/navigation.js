@@ -26,7 +26,7 @@ const Navigation = ({ navigation }) => {
                     options={{ headerShown: false }}
                 /> */}
 
-                <Stack.Screen
+                {/* <Stack.Screen
                     name={ROUTES.LEAD}
                     component={Lead}
                     options={{ headerShown: false }}
@@ -36,7 +36,7 @@ const Navigation = ({ navigation }) => {
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                />
+                /> */}
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

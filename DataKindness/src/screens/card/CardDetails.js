@@ -1,4 +1,4 @@
-import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Image ,Platform} from 'react-native'
+import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Image, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { hasNotch } from 'react-native-device-info';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
@@ -15,11 +15,32 @@ import BackAerrow from '../../components/common/BackAerrow';
 import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
+import PaymentScreen from '../order/PaymentScreen';
+import { CardField, useStripe, useConfirmPayment } from '@stripe/stripe-react-native';
 
 const CardDetails = () => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
+
+    // const { confirmPayment } = useStripe();
+    const { loading, confirmPayment } = useConfirmPayment()
+
+    const handleSubmit = async () => {
+        const billingDetails = {
+            name: 'mansi',
+        };
+
+        const { paymentIntent, error } = await confirmPayment('pi_3OjE5nSDRTuxnZ6y0ByX6Vhh_secret_HpRnRaJFBgDIyun4wMWf8jLwo', {
+            paymentMethodType:"Card",
+            billingDetails,
+        });
+        if (error) {
+            console.log('Payment confirmation error', error);
+        } else if (paymentIntent) {
+            console.log('Success from promise', paymentIntent);
+        }
+    }
 
     return (
         <ImageBackground source={blurBg} style={{ flex: 1, width: '100%' }} resizeMode='cover'>
@@ -139,7 +160,7 @@ const CardDetails = () => {
                                     multiline={true}
                                     numberOfLines={4}
                                 />
-                                <Button text={'Submit'} style={{ marginTop: hp(3) }} />
+                                <Button text={'Submit'} style={{ marginTop: hp(3) }} onPress={handleSubmit} />
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>

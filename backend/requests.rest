@@ -22,6 +22,24 @@ Content-Type: application/json
 {
    "name":"mansi",
    "email":"mansi@gmail.com",
-   "number":"926551",
-   "website":"https://github.com/Mansi231/PYTHON-SQUARE"
+   "number":"9265547512",
+   "website":"https://github.com/Mansi231/PYTHON-SQUARE",
+   "leadAmount":200
+}
+
+### delete payment intent - post method
+POST http://localhost:8000/api/user/deletePaymentIntent
+Content-Type: application/json
+
+{
+   "payment_intent_id":"pi_3OjE7lSDRTuxnZ6y1Ec1Wwcr"
+}
+
+### delete payment intent - post method
+POST http://localhost:8000/api/pay
+Content-Type: application/json
+
+{
+   "payment_id":"pi_3OjE5nSDRTuxnZ6y0ByX6Vhh",
+   "clientSecret":"pi_3OjE5nSDRTuxnZ6y0ByX6Vhh_secret_HpRnRaJFBgDIyun4wMWf8jLwo"
 }

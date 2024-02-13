@@ -1,12 +1,15 @@
 import asyncHandler from "express-async-handler"
 import User from "../schema/User.js"
+import Stripe from 'stripe'
+
+export const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 const addUser = asyncHandler(async (req, res) => {
     try {
-        let { name, email, number, website } = req.body;
+        let { name, email, number, website, leadAmount } = req.body;
 
         // Manually validate fields
-        if (!name || !email || !number || !website) {
+        if (!name || !email || !number || !website || !leadAmount) {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
@@ -18,7 +21,7 @@ const addUser = asyncHandler(async (req, res) => {
 
         // Validate website using regex
         const websiteRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
-        
+
         if (!websiteRegex.test(website)) {
             return res.status(400).json({ error: 'Invalid website URL format' });
         }
@@ -40,7 +43,16 @@ const addUser = asyncHandler(async (req, res) => {
             }
         }
 
-        let user = new User({ name, email, number, website });
+        // add payment request 
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(Number(leadAmount) * 100),
+            currency: 'usd',
+            payment_method_types: ['card'],
+            metadata: { name }
+        })
+
+        let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id });
+
         const savedUser = await user.save();
 
         return res.status(200).json(savedUser);
@@ -49,4 +61,16 @@ const addUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { addUser }
+const deletePaymentIntent = asyncHandler(async (req, res) => {
+
+    let { payment_intent_id } = req?.body
+
+    try {
+        await stripe.paymentIntents.cancel(payment_intent_id);
+        res.status(200).json({ message: 'Payment Intent deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting Payment Intent' });
+    }
+})
+
+export { addUser, deletePaymentIntent }

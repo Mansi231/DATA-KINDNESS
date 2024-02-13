@@ -35,6 +35,10 @@ const userSchema = mongoose.Schema({
     is_payment_done: {
         type: Boolean,
         default: false
+    },
+    client_secret:{
+        type:String,
+        require:true
     }
 
 },

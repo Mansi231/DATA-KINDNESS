@@ -8,6 +8,7 @@ import { COLOR } from '../../utils/color';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import PaymentScreen from './PaymentScreen';
 
 const OrderSummary = () => {
     return (
@@ -69,6 +70,7 @@ const OrderSummary = () => {
                             <MaterialCommunityIcons name='web' size={hp(4)} color={COLOR.white} style={{alignSelf:'center',marginTop:hp(4.5)}}/>
                         </ScrollView>
                     </KeyboardAvoidingView>
+                    {/* <PaymentScreen/> */}
                 </View>
             </SafeAreaView>
         </ImageBackground>

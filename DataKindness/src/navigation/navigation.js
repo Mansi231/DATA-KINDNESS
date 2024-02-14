@@ -30,13 +30,13 @@ const Navigation = ({ navigation }) => {
                     name={ROUTES.LEAD}
                     component={Lead}
                     options={{ headerShown: false }}
-                />
+                /> */}
 
                 <Stack.Screen
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                /> */}
+                />
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

@@ -13,18 +13,21 @@ import Button from '../../components/inputComp/Button';
 import BackAerrow from '../../components/common/BackAerrow';
 import { ValContext } from '../../context/Context';
 import { client } from '../../../services/client';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const UserDetail = ({ navigation }) => {
 
     const { businessCategoryList, leadData, setLeadData, } = useContext(ValContext)
 
-    let { userDetail } = leadData
+    const userDetail = leadData?.userDetail;
 
     const [detail, setDetail] = useState(userDetail ? userDetail : { name: '', email: '', number: '', category: null, website: '' })
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleNavigation = () => {
         let { name, email, number, category, website } = detail
+
+        return
         if (!name || !email || !number || !category || !website) {
             Toast.show({
                 type: 'error',
@@ -78,63 +81,65 @@ const UserDetail = ({ navigation }) => {
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20} // adjust this value based on your UI
                     >
-                        <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
-                            <Text style={styles.queText}>Please enter following details</Text>
-                            <View style={{ width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: hp(1) }}>
+                        <StripeProvider publishableKey={process.env.STRIPE_PUBLISH_KEY}>
+                            <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
+                                <Text style={styles.queText}>Please enter following details</Text>
+                                <View style={{ width: '100%', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: hp(1) }}>
 
-                                <TextInput
-                                    onFocus={() => { }}
-                                    style={[styles?.datePickerViewStyle]}
-                                    editable={true}
-                                    placeholder={'Name'}
-                                    require={true}
-                                    keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, name: text })}
-                                    value={detail?.name}
-                                    onBlur={() => { }}
-                                />
+                                    <TextInput
+                                        onFocus={() => { }}
+                                        style={[styles?.datePickerViewStyle]}
+                                        editable={true}
+                                        placeholder={'Name'}
+                                        require={true}
+                                        keyboardType={'default'}
+                                        onChangeText={(text) => setDetail({ ...detail, name: text })}
+                                        value={detail?.name}
+                                        onBlur={() => { }}
+                                    />
 
-                                <TextInput
-                                    onFocus={() => { }}
-                                    style={[styles?.datePickerViewStyle]}
-                                    editable={true}
-                                    placeholder={'Email'}
-                                    require={true}
-                                    keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, email: text })}
-                                    value={detail?.email}
-                                    onBlur={() => { }}
-                                />
-                                <TextInput
-                                    onFocus={() => { }}
-                                    style={[styles?.datePickerViewStyle]}
-                                    editable={true}
-                                    placeholder={'Phone number'}
-                                    require={true}
-                                    keyboardType={'numeric'}
-                                    onChangeText={(text) => setDetail({ ...detail, number: text })}
-                                    value={detail?.number}
-                                    onBlur={() => { }}
-                                />
-                                <TextInput
-                                    onFocus={() => { }}
-                                    style={[styles?.datePickerViewStyle]}
-                                    editable={true}
-                                    placeholder={'Website'}
-                                    require={true}
-                                    keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, website: text })}
-                                    value={detail?.website}
-                                    onBlur={() => { }}
-                                />
-                                <Dropdown
-                                    showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedCategory'} style={{ width: 'auto' }} options={businessCategoryList} onSelect={(item) => {
-                                        setDetail({ ...detail, category: item })
-                                    }} value={detail?.category?.label || 'Select Business Category'}
-                                />
-                                <Button text={'Submit'} style={{ marginTop: hp(3) }} onPress={handleNavigation} />
-                            </View>
-                        </ScrollView>
+                                    <TextInput
+                                        onFocus={() => { }}
+                                        style={[styles?.datePickerViewStyle]}
+                                        editable={true}
+                                        placeholder={'Email'}
+                                        require={true}
+                                        keyboardType={'default'}
+                                        onChangeText={(text) => setDetail({ ...detail, email: text })}
+                                        value={detail?.email}
+                                        onBlur={() => { }}
+                                    />
+                                    <TextInput
+                                        onFocus={() => { }}
+                                        style={[styles?.datePickerViewStyle]}
+                                        editable={true}
+                                        placeholder={'Phone number'}
+                                        require={true}
+                                        keyboardType={'numeric'}
+                                        onChangeText={(text) => setDetail({ ...detail, number: text })}
+                                        value={detail?.number}
+                                        onBlur={() => { }}
+                                    />
+                                    <TextInput
+                                        onFocus={() => { }}
+                                        style={[styles?.datePickerViewStyle]}
+                                        editable={true}
+                                        placeholder={'Website'}
+                                        require={true}
+                                        keyboardType={'default'}
+                                        onChangeText={(text) => setDetail({ ...detail, website: text })}
+                                        value={detail?.website}
+                                        onBlur={() => { }}
+                                    />
+                                    <Dropdown
+                                        showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedCategory'} style={{ width: 'auto' }} options={businessCategoryList} onSelect={(item) => {
+                                            setDetail({ ...detail, category: item })
+                                        }} value={detail?.category?.label || 'Select Business Category'}
+                                    />
+                                    <Button text={'Submit'} style={{ marginTop: hp(3) }} onPress={handleNavigation} />
+                                </View>
+                            </ScrollView>
+                        </StripeProvider>
                     </KeyboardAvoidingView>
                     <Toast position='top' />
 

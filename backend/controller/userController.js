@@ -8,6 +8,8 @@ const addUser = asyncHandler(async (req, res) => {
     try {
         let { name, email, number, website, leadAmount } = req.body;
 
+        console.log(req?.body, ':: body ::');
+
         // Manually validate fields
         if (!name || !email || !number || !website || !leadAmount) {
             return res.status(400).json({ error: 'All fields are required' });
@@ -28,6 +30,8 @@ const addUser = asyncHandler(async (req, res) => {
 
         const existingUser = await User.findOne({ email });
 
+        console.log(existingUser,':: existingUser ::');
+
         if (existingUser) {
             if (existingUser.is_payment_done) {
                 return res.status(400).json({ error: 'User with this email already exists' });
@@ -44,18 +48,18 @@ const addUser = asyncHandler(async (req, res) => {
         }
 
         // add payment request 
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(Number(leadAmount) * 100),
-            currency: 'usd',
-            payment_method_types: ['card'],
-            metadata: { name }
-        })
+        // const paymentIntent = await stripe.paymentIntents.create({
+        //     amount: Math.round(Number(leadAmount) * 100),
+        //     currency: 'usd',
+        //     payment_method_types: ['card'],
+        //     metadata: { name }
+        // })
 
-        let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id });
+        // let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id });
 
-        const savedUser = await user.save();
+        // const savedUser = await user.save();
 
-        return res.status(200).json(savedUser);
+        // return res.status(200).json(savedUser);
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

@@ -16,53 +16,26 @@ import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
 import PaymentScreen from '../order/PaymentScreen';
-import { CardField, useStripe, useConfirmPayment, initStripe  } from '@stripe/stripe-react-native';
+import { CardField, useStripe, useConfirmPayment, initStripe } from '@stripe/stripe-react-native';
 
 const CardDetails = () => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
 
-    useEffect(() => {
-        initStripe({
-            publishableKey: process.env.STRIPE_PUBLISH_KEY,
-            merchantIdentifier: 'merchant.identifier',
-        });
-    }, []);
-
-    // const { confirmPayment } = useStripe();
-    const { loading, confirmPayment } = useConfirmPayment()
+    const { initPaymentSheet, presentPaymentSheet } = useStripe()
 
     const handleSubmit = async () => {
         const clientSecret = 'pi_3OjE5nSDRTuxnZ6y0ByX6Vhh_secret_HpRnRaJFBgDIyun4wMWf8jLwo';
+        const { error, paymentOption } = await initPaymentSheet({
+            merchantDisplayName: 'Data Kindness',
+            paymentIntentClientSecret: clientSecret,
+            
+        })
+        if (error) return console.log(error, ':: error happened  ::');
 
-        const billingDetails = {
-            name: 'mansi',
-            address: {
-                postal_code: '235612',
-                line1: 'ffdfdfdff dffrefre efrererer',
-            },
-            card: {
-                number: '4242424242424242', // Test card number
-                cvc: '123', // CVV
-                exp_month: 12, // Expiry month
-                exp_year: 2024, // Expiry year
-            }
-        };
-
-        const { paymentIntent, error } = await confirmPayment(clientSecret, {
-            paymentMethodType: 'Card',
-            paymentMethodData: {
-                billingDetails
-            }
-        });
-
-        if (error) {
-            console.error('Payment confirmation error:', error);
-        } else if (paymentIntent) {
-            console.log('Payment successful:', paymentIntent);
-            // Payment successful, navigate to success screen or perform necessary actions
-        }
+        let {error:err}= await presentPaymentSheet();
+        console.log(err,':: err ::');
     }
 
     return (

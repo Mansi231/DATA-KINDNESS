@@ -7,13 +7,17 @@ import { COLOR } from './src/utils/color'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from './pixel/index';
 import MainStackNavigator from './src/navigation/navigation'
 import Context from './src/context/Context';
+import { StripeProvider } from '@stripe/stripe-react-native';
+import {STRIPE_PUBLISH_KEY} from "@env"
 
 const App = () => {
   return (
     // <SafeAreaView style={{ flex: 1 }}>
-    <Context>
-      <MainStackNavigator />
-    </Context>
+    <StripeProvider publishableKey={STRIPE_PUBLISH_KEY}>
+      <Context>
+        <MainStackNavigator />
+      </Context>
+    </StripeProvider>
     // </SafeAreaView>
   )
 }

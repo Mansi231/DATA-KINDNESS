@@ -39,6 +39,9 @@ const userSchema = mongoose.Schema({
     client_secret:{
         type:String,
         require:true
+    },
+    paymentIntent:{
+        type:Object
     }
 
 },

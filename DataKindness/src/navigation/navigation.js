@@ -24,9 +24,9 @@ const Navigation = ({ navigation }) => {
                     name={ROUTES.HOME}
                     component={Home}
                     options={{ headerShown: false }}
-                /> */}
+                />
 
-                {/* <Stack.Screen
+                <Stack.Screen
                     name={ROUTES.LEAD}
                     component={Lead}
                     options={{ headerShown: false }}

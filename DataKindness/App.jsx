@@ -13,7 +13,8 @@ import {STRIPE_PUBLISH_KEY} from "@env"
 const App = () => {
   return (
     // <SafeAreaView style={{ flex: 1 }}>
-    <StripeProvider publishableKey={STRIPE_PUBLISH_KEY} urlScheme='stripesdk://payment_return_url/com.datakindness'>
+    <StripeProvider publishableKey={STRIPE_PUBLISH_KEY} merchantIdentifier="merchant.identifier" // required for Apple Pay
+    urlScheme="your-url-scheme">
       <Context>
         <MainStackNavigator />
       </Context> 

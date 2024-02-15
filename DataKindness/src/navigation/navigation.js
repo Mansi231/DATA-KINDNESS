@@ -20,7 +20,7 @@ const Navigation = ({ navigation }) => {
     return (
         <NavigationContainer ref={navigationRef}>
             <Stack.Navigator>
-                {/* <Stack.Screen
+                <Stack.Screen
                     name={ROUTES.HOME}
                     component={Home}
                     options={{ headerShown: false }}
@@ -30,13 +30,13 @@ const Navigation = ({ navigation }) => {
                     name={ROUTES.LEAD}
                     component={Lead}
                     options={{ headerShown: false }}
-                /> */}
+                />
 
-                {/* <Stack.Screen
+                <Stack.Screen
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                /> */}
+                />
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

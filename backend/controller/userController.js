@@ -48,7 +48,7 @@ const addUser = asyncHandler(async (req, res) => {
         // add payment request 
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(Number(leadAmount) * 100),
-            currency: 'inr',
+            currency: 'INR',
             payment_method_types: ['card'],
             metadata: { name }
         })

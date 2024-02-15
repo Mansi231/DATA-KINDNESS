@@ -8,6 +8,7 @@ const Context = ({ children }) => {
 
     const [leadList, setLeadList] = useState([])
     const [businessCategoryList, setBusinessCategoryList] = useState([])
+    const [clientSecret, setClientSecret] = useState(null)
 
     // leadData:{selectedLead,userDetail}
     const [leadData,setLeadData] = useState(null)
@@ -26,7 +27,7 @@ const Context = ({ children }) => {
 
 
     return (
-        <ValContext.Provider value={{ leadList, setLeadList,businessCategoryList, setBusinessCategoryList , leadData,setLeadData ,userDetail,setUserDetail}}>{children}</ValContext.Provider>
+        <ValContext.Provider value={{ leadList, setLeadList,businessCategoryList, setBusinessCategoryList , leadData,setLeadData ,userDetail,setUserDetail,clientSecret, setClientSecret}}>{children}</ValContext.Provider>
     )
 }
 

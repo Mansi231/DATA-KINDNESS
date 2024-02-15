@@ -1,5 +1,5 @@
 import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Image, Platform } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { hasNotch } from 'react-native-device-info';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
@@ -16,44 +16,24 @@ import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
 import PaymentScreen from '../order/PaymentScreen';
-import { CardField, useStripe, useConfirmPayment, initStripe,confirmPayment   } from '@stripe/stripe-react-native';
+import { CardField, useStripe, useConfirmPayment, initStripe, confirmPayment } from '@stripe/stripe-react-native';
+import { ValContext } from '../../context/Context';
 
 const CardDetails = () => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
-
-    useEffect(() => {
-        initStripe({
-            publishableKey: process.env.STRIPE_PUBLISH_KEY,
-            merchantIdentifier: 'merchant.identifier',
-        });
-    }, []);
-
-    // const { confirmPayment } = useStripe();
-    const { loading, confirmPayment } = useConfirmPayment()
+    const { clientSecret } = useContext(ValContext)
 
     const handleSubmit = async () => {
-        const clientSecret = 'pi_3Ok2NESDRTuxnZ6y1XGzHky5_secret_OGKcOKnvu9o4R28Z5VhHDYQKz';
-
-        const { paymentIntent, error } = await confirmPayment(clientSecret, {
-            paymentMethodType: 'Card',
-            paymentMethodData: {
-                billingDetails:{
-                    email:'Sarika@gmail.com',
-                    name:'Sarika',
-                    phone:'7867367546'
-                },
-                paymentMethodId:'pm_1Ok2crSDRTuxnZ6yIjcFIpYW'
-            }
-        });
-
-        if (error) {
-            console.error('Payment confirmation error:', error);
-        } else if (paymentIntent) {
-            console.log('Payment successful:', paymentIntent);
-            // Payment successful, navigate to success screen or perform necessary actions
+        try {
+            console.log(clientSecret, ':: secret key ::');
+            let confirmPaymentObj = await confirmPayment(clientSecret, { paymentMethodType: 'Card' })
+            console.log(confirmPaymentObj, ':: confirmPaymentObj ::');
+        } catch (error) {
+            console.log(error, ':: catch erro ::');
         }
+
     }
 
     return (

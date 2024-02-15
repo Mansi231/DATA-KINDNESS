@@ -14,10 +14,11 @@ import BackAerrow from '../../components/common/BackAerrow';
 import { ValContext } from '../../context/Context';
 import { client } from '../../../services/client';
 import { CardField, useStripe, useConfirmPayment, initStripe } from '@stripe/stripe-react-native';
+import { ROUTES } from '../../../services/routes';
 
 const UserDetail = ({ navigation }) => {
 
-    const { businessCategoryList, leadData, setLeadData, } = useContext(ValContext)
+    const { businessCategoryList, leadData, setLeadData, setClientSecret } = useContext(ValContext)
 
     const userDetail = leadData?.userDetail;
     const { initPaymentSheet, presentPaymentSheet } = useStripe()
@@ -26,19 +27,6 @@ const UserDetail = ({ navigation }) => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleNavigation = async () => {
-
-        const { error, paymentOption } = await initPaymentSheet({
-            merchantDisplayName: 'Data Kindness',
-            paymentIntentClientSecret: 'pi_3Ok2NESDRTuxnZ6y1XGzHky5_secret_OGKcOKnvu9o4R28Z5VhHDYQKz',
-        })
-        if (error) return console.log(error, ':: error happened  ::');
-
-        presentPaymentSheet().then((result) => {
-
-            console.log(result, ':: result ::');
-        }).catch((err) => { console.log(err, ':: err in sheet ::'); });
-
-        return
         let { name, email, number, category, website, leadAmount } = detail
         if (!name || !email || !number || !category || !website) {
             Toast.show({
@@ -63,18 +51,9 @@ const UserDetail = ({ navigation }) => {
                     text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
                     topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
                 });
-                const clientSecret = res.data?.client_secret;
-                const { error, paymentOption } = await initPaymentSheet({
-                    merchantDisplayName: 'Data Kindness',
-                    paymentIntentClientSecret: clientSecret,
-                })
-                if (error) return console.log(error, ':: error happened  ::');
-
-                presentPaymentSheet().then((result) => {
-
-                    console.log(result, ':: result ::');
-                }).catch((err) => { console.log(err, ':: err in sheet ::'); });
-
+                const client_secret = res.data?.client_secret;
+                setClientSecret(client_secret)
+                navigation.navigate(ROUTES.CARD_DETAIL)
             }).catch((err) => {
                 Toast.show({
                     type: 'error',
@@ -101,6 +80,8 @@ const UserDetail = ({ navigation }) => {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <Header />
+                    <Toast position='top' />
+
                     <KeyboardAvoidingView
                         style={{ flex: 1, flexGrow: 1, width: '100%' }}
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -164,7 +145,6 @@ const UserDetail = ({ navigation }) => {
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
-                    <Toast position='top' />
 
                     <BackAerrow onPress={() => navigation.goBack()} />
 

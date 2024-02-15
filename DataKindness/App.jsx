@@ -13,10 +13,10 @@ import {STRIPE_PUBLISH_KEY} from "@env"
 const App = () => {
   return (
     // <SafeAreaView style={{ flex: 1 }}>
-    <StripeProvider publishableKey={STRIPE_PUBLISH_KEY}>
+    <StripeProvider publishableKey={STRIPE_PUBLISH_KEY} urlScheme='stripesdk://payment_return_url/com.datakindness'>
       <Context>
         <MainStackNavigator />
-      </Context>
+      </Context> 
     </StripeProvider>
     // </SafeAreaView>
   )

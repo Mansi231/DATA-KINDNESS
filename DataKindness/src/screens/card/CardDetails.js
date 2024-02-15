@@ -16,26 +16,44 @@ import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
 import PaymentScreen from '../order/PaymentScreen';
-import { CardField, useStripe, useConfirmPayment, initStripe } from '@stripe/stripe-react-native';
+import { CardField, useStripe, useConfirmPayment, initStripe,confirmPayment   } from '@stripe/stripe-react-native';
 
 const CardDetails = () => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
 
-    const { initPaymentSheet, presentPaymentSheet } = useStripe()
+    useEffect(() => {
+        initStripe({
+            publishableKey: process.env.STRIPE_PUBLISH_KEY,
+            merchantIdentifier: 'merchant.identifier',
+        });
+    }, []);
+
+    // const { confirmPayment } = useStripe();
+    const { loading, confirmPayment } = useConfirmPayment()
 
     const handleSubmit = async () => {
-        const clientSecret = 'pi_3OjE5nSDRTuxnZ6y0ByX6Vhh_secret_HpRnRaJFBgDIyun4wMWf8jLwo';
-        const { error, paymentOption } = await initPaymentSheet({
-            merchantDisplayName: 'Data Kindness',
-            paymentIntentClientSecret: clientSecret,
-            
-        })
-        if (error) return console.log(error, ':: error happened  ::');
+        const clientSecret = 'pi_3Ok2NESDRTuxnZ6y1XGzHky5_secret_OGKcOKnvu9o4R28Z5VhHDYQKz';
 
-        let {error:err}= await presentPaymentSheet();
-        console.log(err,':: err ::');
+        const { paymentIntent, error } = await confirmPayment(clientSecret, {
+            paymentMethodType: 'Card',
+            paymentMethodData: {
+                billingDetails:{
+                    email:'Sarika@gmail.com',
+                    name:'Sarika',
+                    phone:'7867367546'
+                },
+                paymentMethodId:'pm_1Ok2crSDRTuxnZ6yIjcFIpYW'
+            }
+        });
+
+        if (error) {
+            console.error('Payment confirmation error:', error);
+        } else if (paymentIntent) {
+            console.log('Payment successful:', paymentIntent);
+            // Payment successful, navigate to success screen or perform necessary actions
+        }
     }
 
     return (

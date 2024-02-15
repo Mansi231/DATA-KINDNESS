@@ -32,11 +32,11 @@ const Navigation = ({ navigation }) => {
                     options={{ headerShown: false }}
                 /> */}
 
-                <Stack.Screen
+                {/* <Stack.Screen
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                />
+                /> */}
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

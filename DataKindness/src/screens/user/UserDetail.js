@@ -25,9 +25,21 @@ const UserDetail = ({ navigation }) => {
     const [detail, setDetail] = useState(userDetail ? userDetail : { name: '', email: '', number: '', category: null, website: '' })
     const [showDropdown, setShowDropdown] = useState(false);
 
-    const handleNavigation = () => {
-        
-        let { name, email, number, category, website } = detail
+    const handleNavigation = async () => {
+
+        const { error, paymentOption } = await initPaymentSheet({
+            merchantDisplayName: 'Data Kindness',
+            paymentIntentClientSecret: 'pi_3Ok2NESDRTuxnZ6y1XGzHky5_secret_OGKcOKnvu9o4R28Z5VhHDYQKz',
+        })
+        if (error) return console.log(error, ':: error happened  ::');
+
+        presentPaymentSheet().then((result) => {
+
+            console.log(result, ':: result ::');
+        }).catch((err) => { console.log(err, ':: err in sheet ::'); });
+
+        return
+        let { name, email, number, category, website, leadAmount } = detail
         if (!name || !email || !number || !category || !website) {
             Toast.show({
                 type: 'error',
@@ -51,7 +63,6 @@ const UserDetail = ({ navigation }) => {
                     text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
                     topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
                 });
-                console.log(res.data, ':: res :');
                 const clientSecret = res.data?.client_secret;
                 const { error, paymentOption } = await initPaymentSheet({
                     merchantDisplayName: 'Data Kindness',

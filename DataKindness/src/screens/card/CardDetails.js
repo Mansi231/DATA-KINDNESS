@@ -32,7 +32,7 @@ const CardDetails = () => {
             // let confirmPaymentObj = await confirmPayment(clientDetail?.clientSecret, { paymentMethodType: 'Card', paymentMethodData: { paymentMethodId: clientDetail?.paymentMethodId } })
             // console.log(confirmPaymentObj, ':: confirmPaymentObj ::');
 
-            client.post(`pay/confirm-payment`, { paymentIntentId: 'pi_3OkLE4SDRTuxnZ6y0aLywvDk', clientSecret: 'pi_3OkLE4SDRTuxnZ6y0aLywvDk_secret_q4xEusg3NzkGzHKfRdk6ORjPQ', paymentMethodId: 'pm_card_visa' }).then((result) => { console.log(result.data, ':: result of confirm payent') }).catch((error) => { console.log(error, ':: error while confirming payment ::') })
+            client.post(`pay/confirm-payment`, { paymentIntentId: 'pi_3OkNIPSDRTuxnZ6y1VEZcrsz', clientSecret: 'pi_3OkNIPSDRTuxnZ6y1VEZcrsz_secret_VH5PwMSlzmZhkVY15QJgHkhI3', paymentMethodId: 'pm_1OkNIOSDRTuxnZ6yl1kfCKeD' }).then((result) => { console.log(result.data, ':: result of confirm payent') }).catch((error) => { console.log(error, ':: error while confirming payment ::') })
 
         } catch (error) {
             console.log(error, ':: catch erro ::');

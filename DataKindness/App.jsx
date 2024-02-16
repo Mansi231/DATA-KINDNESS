@@ -15,24 +15,6 @@ const App = () => {
     // <SafeAreaView style={{ flex: 1 }}>
     <StripeProvider publishableKey={STRIPE_PUBLISH_KEY} merchantIdentifier="merchant.identifier" // required for Apple Pay
       urlScheme="your-url-scheme"
-      threeDSecureParams={{
-        backgroundColor: '#FFFFFF', // iOS only
-        timeout: 5,
-        label: {
-          headingFontSize: 13,
-        },
-        navigationBar: {
-          headerText: '3d secure',
-        },
-        footer: { // iOS only
-          backgroundColor: '#FFFFFF',
-        },
-        submitButton: {
-          cornerRadius: 12,
-          textColor: '#FFFFFF',
-          textFontSize: 14,
-        },
-      }}
     >
       <Context>
         <MainStackNavigator />

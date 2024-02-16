@@ -8,16 +8,35 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from './pixel/i
 import MainStackNavigator from './src/navigation/navigation'
 import Context from './src/context/Context';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import {STRIPE_PUBLISH_KEY} from "@env"
+import { STRIPE_PUBLISH_KEY } from "@env"
 
 const App = () => {
   return (
     // <SafeAreaView style={{ flex: 1 }}>
     <StripeProvider publishableKey={STRIPE_PUBLISH_KEY} merchantIdentifier="merchant.identifier" // required for Apple Pay
-    urlScheme="your-url-scheme">
+      urlScheme="your-url-scheme"
+      threeDSecureParams={{
+        backgroundColor: '#FFFFFF', // iOS only
+        timeout: 5,
+        label: {
+          headingFontSize: 13,
+        },
+        navigationBar: {
+          headerText: '3d secure',
+        },
+        footer: { // iOS only
+          backgroundColor: '#FFFFFF',
+        },
+        submitButton: {
+          cornerRadius: 12,
+          textColor: '#FFFFFF',
+          textFontSize: 14,
+        },
+      }}
+    >
       <Context>
         <MainStackNavigator />
-      </Context> 
+      </Context>
     </StripeProvider>
     // </SafeAreaView>
   )

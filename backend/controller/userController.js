@@ -4,6 +4,24 @@ import Stripe from 'stripe'
 
 export const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
+const createPaymentMethod = async () => {
+    try {
+        const paymentMethod = await stripe.paymentMethods.create({
+            type: 'card',
+            card: {
+                token: 'tok_visa'
+            },
+        });
+
+        console.log(paymentMethod, ':: method ::');
+
+        return paymentMethod.id; // Return the PaymentMethod ID
+    } catch (error) {
+        console.log(error, ':: method error ::');
+        throw new Error('Error creating PaymentMethod: ' + error.message);
+    }
+}
+
 const addUser = asyncHandler(async (req, res) => {
     try {
         let { name, email, number, website, leadAmount } = req.body;
@@ -45,15 +63,25 @@ const addUser = asyncHandler(async (req, res) => {
             }
         }
 
+        // Create PaymentMethod
+        const paymentMethodId = await createPaymentMethod();
+
+        // create customer in stripe
+        const customer = await stripe.customers.create({ email, payment_method: paymentMethodId });
+        const ephemeralKey = await stripe.ephemeralKeys.create({
+            customer: customer.id
+        }, { apiVersion: '2023-10-16' })
+
         // add payment request 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(Number(leadAmount) * 100),
+            amount: Math.round(Number(leadAmount)),
             currency: 'INR',
             payment_method_types: ['card'],
-            metadata: { name }
+            metadata: { name },
+            customer: customer?.id
         })
 
-        let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id });
+        let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id, ephemeralKey: ephemeralKey?.secret, customer: customer?.id, payment_method_id: paymentMethodId });
 
         const savedUser = await user.save();
 
@@ -74,5 +102,6 @@ const deletePaymentIntent = asyncHandler(async (req, res) => {
         res.status(500).json({ error: 'Error deleting Payment Intent' });
     }
 })
+
 
 export { addUser, deletePaymentIntent }

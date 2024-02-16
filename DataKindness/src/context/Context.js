@@ -8,11 +8,14 @@ const Context = ({ children }) => {
 
     const [leadList, setLeadList] = useState([])
     const [businessCategoryList, setBusinessCategoryList] = useState([])
-    const [clientSecret, setClientSecret] = useState(null)
+
+    const [clientDetail, setClientDetail] = useState({ clientSecret: null, paymentMethodId: null })
+    // const [clientSecret, setClientSecret] = useState(null)
+    // const [paymentMethodId,setPaymentMethodId] = useState(null)
 
     // leadData:{selectedLead,userDetail}
-    const [leadData,setLeadData] = useState(null)
-    const [userDetail,setUserDetail] = useState(null)
+    const [leadData, setLeadData] = useState(null)
+    const [userDetail, setUserDetail] = useState(null)
 
     useEffect(() => {
         Promise.all([client.get('lead'), client.get('category')])
@@ -27,7 +30,7 @@ const Context = ({ children }) => {
 
 
     return (
-        <ValContext.Provider value={{ leadList, setLeadList,businessCategoryList, setBusinessCategoryList , leadData,setLeadData ,userDetail,setUserDetail,clientSecret, setClientSecret}}>{children}</ValContext.Provider>
+        <ValContext.Provider value={{ leadList, setLeadList, businessCategoryList, setBusinessCategoryList, leadData, setLeadData, userDetail, setUserDetail,  clientDetail, setClientDetail }}>{children}</ValContext.Provider>
     )
 }
 

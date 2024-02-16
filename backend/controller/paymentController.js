@@ -1,24 +1,33 @@
 import asyncHandler from 'express-async-handler'
 import { stripe } from './userController.js'
 
+// Server-side code
+const confirmPayment = asyncHandler(async (req, res) => {
 
-const addPayment = asyncHandler(async (req, res) => {
-    const { payment_id ,clientSecret} = req.body;
-
+    let { clientSecret, paymentMethodId ,paymentIntentId } = req?.body
+    if (!clientSecret || !paymentMethodId || !paymentIntentId) return res.status(500).json({ error: 'Something missing ! clientSecret or PaymentMethodId .' });
     try {
-        // Confirm the payment intent using the payment ID
-        const paymentIntent = await stripe.paymentIntents.confirm(payment_id);
-        res.json({ success: true, paymentIntent });
+        const paymentIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
+            payment_method: paymentMethodId
+        });
 
-        // If payment is successful, you can proceed with further logic
-        res.status(200).json({ success: true, paymentIntent });
-        
+        // const setupIntentCreated = await stripe.setupIntents.create({
+        //     payment_method_types: ['card'],
+        // });
+      
+
+        // const setupIntentConfirm = await stripe.setupIntents.confirm(
+        //     clientSecret,
+        //     {
+        //         payment_method: paymentMethodId,
+        //     }
+        // );
+
+        return res.status(200).json(paymentIntent);
     } catch (error) {
-        // Handle errors appropriately
-        console.error('Error confirming payment intent:', error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error('Error confirming payment:', error);
+        return res.status(500).json({ error: error.message });
     }
-
 })
 
-export { addPayment }
+export { confirmPayment }

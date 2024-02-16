@@ -40,8 +40,11 @@ const userSchema = mongoose.Schema({
         type:String,
         require:true
     },
-    paymentIntent:{
-        type:Object
+    payment_intent_id:{
+        type:String
+    },
+    payment_method_id:{
+        type:String
     }
 
 },

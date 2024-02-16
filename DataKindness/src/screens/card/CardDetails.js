@@ -18,18 +18,22 @@ import DiscoverCard from '../../assets/discover-card.png'
 import PaymentScreen from '../order/PaymentScreen';
 import { CardField, useStripe, useConfirmPayment, initStripe, confirmPayment } from '@stripe/stripe-react-native';
 import { ValContext } from '../../context/Context';
+import { client } from '../../../services/client';
 
 const CardDetails = () => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
-    const { clientSecret } = useContext(ValContext)
+    const { clientDetail, setClientDetail } = useContext(ValContext)
 
     const handleSubmit = async () => {
         try {
-            console.log(clientSecret, ':: secret key ::');
-            let confirmPaymentObj = await confirmPayment(clientSecret, { paymentMethodType: 'Card' })
-            console.log(confirmPaymentObj, ':: confirmPaymentObj ::');
+            console.log(clientDetail, ':: secret key ::');
+            // let confirmPaymentObj = await confirmPayment(clientDetail?.clientSecret, { paymentMethodType: 'Card', paymentMethodData: { paymentMethodId: clientDetail?.paymentMethodId } })
+            // console.log(confirmPaymentObj, ':: confirmPaymentObj ::');
+
+            client.post(`pay/confirm-payment`, { paymentIntentId: 'pi_3OkLE4SDRTuxnZ6y0aLywvDk', clientSecret: 'pi_3OkLE4SDRTuxnZ6y0aLywvDk_secret_q4xEusg3NzkGzHKfRdk6ORjPQ', paymentMethodId: 'pm_card_visa' }).then((result) => { console.log(result.data, ':: result of confirm payent') }).catch((error) => { console.log(error, ':: error while confirming payment ::') })
+
         } catch (error) {
             console.log(error, ':: catch erro ::');
         }

@@ -18,7 +18,7 @@ import { ROUTES } from '../../../services/routes';
 
 const UserDetail = ({ navigation }) => {
 
-    const { businessCategoryList, leadData, setLeadData, setClientSecret } = useContext(ValContext)
+    const { businessCategoryList, leadData, setLeadData, setClientDetail, clientDetail } = useContext(ValContext)
 
     const userDetail = leadData?.userDetail;
     const { initPaymentSheet, presentPaymentSheet } = useStripe()
@@ -43,6 +43,10 @@ const UserDetail = ({ navigation }) => {
 
             client.post(`user/addUser`, { ...detail, leadAmount: leadData?.selectLead?.amount }).then(async (res) => {
 
+                const client_secret = res.data?.client_secret;
+                const payment_method_id = res?.data?.payment_method_id
+
+                setClientDetail({ ...clientDetail, clientSecret: client_secret, paymentMethodId: payment_method_id })
                 Toast.show({
                     type: 'success',
                     text1: `Saved Successfully !`,
@@ -50,10 +54,9 @@ const UserDetail = ({ navigation }) => {
                     swipeable: true,
                     text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
                     topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                    onHide: () => { navigation.navigate(ROUTES.CARD_DETAIL) }
                 });
-                const client_secret = res.data?.client_secret;
-                setClientSecret(client_secret)
-                navigation.navigate(ROUTES.CARD_DETAIL)
+
             }).catch((err) => {
                 Toast.show({
                     type: 'error',

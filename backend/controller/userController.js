@@ -63,6 +63,67 @@ const addUser = asyncHandler(async (req, res) => {
             }
         }
 
+
+        // -----------------------------------------------------------------------------------------
+        stripe.customers.create({
+
+            email: email,
+
+            name: name,
+
+            source: 'tok_visa'
+
+        }, function (err, customer) {
+
+            if (err) {
+                console.log(err, ':: err customer::');
+                return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
+            }
+
+            console.log(customer, "************customer************")
+
+            stripe.charges.create({
+                amount: Number(leadAmount) * 100,
+                currency: 'inr',
+                customer: customer.id,
+            }, function (err, charge) {
+
+                if (err) {
+                    console.log(err, ':: err charge ::');
+                    return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
+                }
+
+                console.log(charge, "***********charge***********")
+
+                stripe.customers.retrieve(
+
+                    charge.customer, function (err, customer_detail) {
+
+                        if (err) {
+                            console.log(err, ':: err customer_detail::');
+                            return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
+                        }
+
+                        else {
+
+                            let amount1 = charge.amount / 100
+
+                            let data = { user_id: user_id, payment_id: charge.id, o_name: customer_detail.name, o_email: customer_detail.email, payment_type: charge.payment_method_details.type, payment_status: charge.paid == true ? "Paid" : "Incomplet", payment_gatway_type: "stripe", pay_amount: amount1 }
+
+                            return res.status(200).send({ 'status': true, 'code': 200, 'message': "Payment succesfully.", data })
+
+                        }
+                    }
+
+                );
+
+            });
+
+        });
+
+        // -----------------------------------------------------------------------------------------
+
+        return
         // Create PaymentMethod
         const paymentMethodId = await createPaymentMethod();
 

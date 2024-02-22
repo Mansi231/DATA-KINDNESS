@@ -24,22 +24,17 @@ const createPaymentMethod = async () => {
 
 const addUser = asyncHandler(async (req, res) => {
     try {
-        let { name, email, number, website, leadAmount } = req.body;
+        let { name, email, number, website } = req.body;
 
-        console.log(req?.body, ':: body ::');
-
-        // Manually validate fields
-        if (!name || !email || !number || !website || !leadAmount) {
+        if (!name || !email || !number || !website ) {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-        // Validate phone number using regex
         const phoneNumberRegex = /^\d{10}$/;
         if (!phoneNumberRegex.test(number)) {
             return res.status(400).json({ error: 'Invalid phone number format' });
         }
 
-        // Validate website using regex
         const websiteRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
 
         if (!websiteRegex.test(website)) {
@@ -63,86 +58,7 @@ const addUser = asyncHandler(async (req, res) => {
             }
         }
 
-
-        // -----------------------------------------------------------------------------------------
-        stripe.customers.create({
-
-            email: email,
-
-            name: name,
-
-            source: 'tok_visa'
-
-        }, function (err, customer) {
-
-            if (err) {
-                console.log(err, ':: err customer::');
-                return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
-            }
-
-            console.log(customer, "************customer************")
-
-            stripe.charges.create({
-                amount: Number(leadAmount) * 100,
-                currency: 'inr',
-                customer: customer.id,
-            }, function (err, charge) {
-
-                if (err) {
-                    console.log(err, ':: err charge ::');
-                    return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
-                }
-
-                console.log(charge, "***********charge***********")
-
-                stripe.customers.retrieve(
-
-                    charge.customer, function (err, customer_detail) {
-
-                        if (err) {
-                            console.log(err, ':: err customer_detail::');
-                            return res.status(400).send({ 'status': false, 'code': 400, 'message': err.message, 'error': 'Error!' })
-                        }
-
-                        else {
-
-                            let amount1 = charge.amount / 100
-
-                            let data = { user_id: user_id, payment_id: charge.id, o_name: customer_detail.name, o_email: customer_detail.email, payment_type: charge.payment_method_details.type, payment_status: charge.paid == true ? "Paid" : "Incomplet", payment_gatway_type: "stripe", pay_amount: amount1 }
-
-                            return res.status(200).send({ 'status': true, 'code': 200, 'message': "Payment succesfully.", data })
-
-                        }
-                    }
-
-                );
-
-            });
-
-        });
-
-        // -----------------------------------------------------------------------------------------
-
-        return
-        // Create PaymentMethod
-        const paymentMethodId = await createPaymentMethod();
-
-        // create customer in stripe
-        const customer = await stripe.customers.create({ email, payment_method: paymentMethodId });
-        const ephemeralKey = await stripe.ephemeralKeys.create({
-            customer: customer.id
-        }, { apiVersion: '2023-10-16' })
-
-        // add payment request 
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(Number(leadAmount)),
-            currency: 'INR',
-            payment_method_types: ['card'],
-            metadata: { name },
-            customer: customer?.id
-        })
-
-        let user = new User({ name, email, number, website, client_secret: paymentIntent?.client_secret, payment_intent_id: paymentIntent?.id, ephemeralKey: ephemeralKey?.secret, customer: customer?.id, payment_method_id: paymentMethodId });
+        let user = new User({ name, email, number, website  });
 
         const savedUser = await user.save();
 

@@ -15,29 +15,18 @@ import BackAerrow from '../../components/common/BackAerrow';
 import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
-import PaymentScreen from '../order/PaymentScreen';
-import { CardField, useStripe, useConfirmPayment, initStripe, confirmPayment } from '@stripe/stripe-react-native';
 import { ValContext } from '../../context/Context';
 import { client } from '../../../services/client';
+import { ROUTES } from '../../../services/routes';
 
-const CardDetails = () => {
+const CardDetails = ({navigation}) => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
     const { clientDetail, setClientDetail } = useContext(ValContext)
 
     const handleSubmit = async () => {
-        try {
-            console.log(clientDetail, ':: secret key ::');
-            // let confirmPaymentObj = await confirmPayment(clientDetail?.clientSecret, { paymentMethodType: 'Card', paymentMethodData: { paymentMethodId: clientDetail?.paymentMethodId } })
-            // console.log(confirmPaymentObj, ':: confirmPaymentObj ::');
-
-            client.post(`pay/confirm-payment`, { paymentIntentId: 'pi_3OkNIPSDRTuxnZ6y1VEZcrsz', clientSecret: 'pi_3OkNIPSDRTuxnZ6y1VEZcrsz_secret_VH5PwMSlzmZhkVY15QJgHkhI3', paymentMethodId: 'pm_1OkNIOSDRTuxnZ6yl1kfCKeD' }).then((result) => { console.log(result.data, ':: result of confirm payent') }).catch((error) => { console.log(error, ':: error while confirming payment ::') })
-
-        } catch (error) {
-            console.log(error, ':: catch erro ::');
-        }
-
+       
     }
 
     return (
@@ -162,7 +151,7 @@ const CardDetails = () => {
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
-                    <BackAerrow />
+                    <BackAerrow onPress={()=>navigation.navigate(ROUTES.USER_DETAIL)}/>
                 </View>
             </SafeAreaView>
 

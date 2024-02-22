@@ -1,6 +1,6 @@
 import Toast from 'react-native-toast-message';
 import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View, ScrollView, StatusBar, Platform } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
 import blurBg from '../../assets/blur_bg.jpg'
@@ -13,13 +13,14 @@ import Dropdown from '../../components/inputComp/DropDown'
 import BackAerrow from '../../components/common/BackAerrow'
 import { ValContext } from '../../context/Context'
 import { ROUTES } from '../../../services/routes';
+import { KEYS, setItemToStorage } from '../../../services/storage';
 
 const Lead = ({ navigation }) => {
+
 
   const { leadList, setLeadList, leadData, setLeadData, userDetail, setUserDetail } = useContext(ValContext)
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectLead, setSelectLead] = useState(leadData?.selectLead)
 
   const handleNavigation = () => {
     if (leadData?.selectLead) {
@@ -35,6 +36,12 @@ const Lead = ({ navigation }) => {
         topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       });
     }
+  }
+
+  const handleSelectLead = async (item) => {
+    setLeadData({ ...leadData, selectLead: item })
+    await setItemToStorage(KEYS.screenData, { ...leadData, selectLead: item })
+    await setItemToStorage(KEYS.lastScreen, ROUTES.LEAD);
   }
 
   return (
@@ -54,15 +61,14 @@ const Lead = ({ navigation }) => {
               <Text style={[styles?.queText]}>How many leads you want to buy ?</Text>
               <Dropdown
                 showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedLead'} style={{ width: 'auto' }} options={leadList} onSelect={(item) => {
-                  setSelectLead(item);
-                  setLeadData({ ...leadData, selectLead: item })
-                }} value={selectLead?.label || 'Select'}
+                  handleSelectLead(item)
+                }} value={leadData?.selectLead?.label || 'Select'}
               />
               <Button text={'Buy'} onPress={handleNavigation} />
             </View>
           </ScrollView>
           <Toast position='top' />
-          <BackAerrow onPress={()=>navigation.navigate(ROUTES.HOME)}/>
+          <BackAerrow onPress={() => navigation.navigate(ROUTES.HOME)} />
         </View>
       </SafeAreaView>
 

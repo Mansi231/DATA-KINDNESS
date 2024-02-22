@@ -15,15 +15,14 @@ import { ValContext } from '../../context/Context';
 import { client } from '../../../services/client';
 import { CardField, useStripe, useConfirmPayment, initStripe } from '@stripe/stripe-react-native';
 import { ROUTES } from '../../../services/routes';
+import { KEYS, setItemToStorage } from '../../../services/storage';
 
 const UserDetail = ({ navigation }) => {
 
     const { businessCategoryList, leadData, setLeadData, setClientDetail, clientDetail } = useContext(ValContext)
 
-    const userDetail = leadData?.userDetail;
-    const { initPaymentSheet, presentPaymentSheet } = useStripe()
+    const detail = leadData?.userDetail ?leadData?.userDetail :{ name: '', email: '', number: '', category: null, website: '' };
 
-    const [detail, setDetail] = useState(userDetail ? userDetail : { name: '', email: '', number: '', category: null, website: '' })
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleNavigation = async () => {
@@ -41,12 +40,11 @@ const UserDetail = ({ navigation }) => {
         else {
             setLeadData({ ...leadData, userDetail: detail })
 
-            client.post(`user/addUser`, { ...detail, leadAmount: leadData?.selectLead?.amount }).then(async (res) => {
+            client.post(`user/addUser`, { ...detail}).then(async (res) => {
 
-                const client_secret = res.data?.client_secret;
-                const payment_method_id = res?.data?.payment_method_id
+                await setItemToStorage(KEYS.screenData,{ ...leadData, userDetail: detail })
+                await setItemToStorage(KEYS.lastScreen, ROUTES.USER_DETAIL);
 
-                setClientDetail({ ...clientDetail, clientSecret: client_secret, paymentMethodId: payment_method_id })
                 Toast.show({
                     type: 'success',
                     text1: `Saved Successfully !`,
@@ -101,7 +99,7 @@ const UserDetail = ({ navigation }) => {
                                     placeholder={'Name'}
                                     require={true}
                                     keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, name: text })}
+                                    onChangeText={(text) => setLeadData({...leadData,userDetail:{ ...detail, name: text }})}
                                     value={detail?.name}
                                     onBlur={() => { }}
                                 />
@@ -113,7 +111,7 @@ const UserDetail = ({ navigation }) => {
                                     placeholder={'Email'}
                                     require={true}
                                     keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, email: text })}
+                                    onChangeText={(text) => setLeadData({...leadData,userDetail:{ ...detail, email: text }})}
                                     value={detail?.email}
                                     onBlur={() => { }}
                                 />
@@ -124,7 +122,7 @@ const UserDetail = ({ navigation }) => {
                                     placeholder={'Phone number'}
                                     require={true}
                                     keyboardType={'numeric'}
-                                    onChangeText={(text) => setDetail({ ...detail, number: text })}
+                                    onChangeText={(text) => setLeadData({...leadData,userDetail:{ ...detail, number: text }})}
                                     value={detail?.number}
                                     onBlur={() => { }}
                                 />
@@ -135,13 +133,13 @@ const UserDetail = ({ navigation }) => {
                                     placeholder={'Website'}
                                     require={true}
                                     keyboardType={'default'}
-                                    onChangeText={(text) => setDetail({ ...detail, website: text })}
+                                    onChangeText={(text) => setLeadData({...leadData,userDetail:{ ...detail, website: text }})}
                                     value={detail?.website}
                                     onBlur={() => { }}
                                 />
                                 <Dropdown
                                     showDropdown={showDropdown} setShowDropdown={setShowDropdown} current={'selectedCategory'} style={{ width: 'auto' }} options={businessCategoryList} onSelect={(item) => {
-                                        setDetail({ ...detail, category: item })
+                                        setLeadData({...leadData,userDetail:{ ...detail, category: item }})
                                     }} value={detail?.category?.label || 'Select Business Category'}
                                 />
                                 <Button text={'Submit'} style={{ marginTop: hp(3) }} onPress={handleNavigation} />

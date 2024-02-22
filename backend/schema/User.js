@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = mongoose.Schema({
 
@@ -32,20 +32,6 @@ const userSchema = mongoose.Schema({
             message: props => `${props.value} is not a valid website URL`
         }
     },
-    is_payment_done: {
-        type: Boolean,
-        default: false
-    },
-    client_secret:{
-        type:String,
-        require:true
-    },
-    payment_intent_id:{
-        type:String
-    },
-    payment_method_id:{
-        type:String
-    }
 
 },
     {

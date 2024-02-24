@@ -19,49 +19,49 @@ const Navigation = ({ navigation }) => {
 
     const navigationRef = useRef();
 
-    useEffect(() => {
-        const getInitialRoute = async () => {
-            try {
-                const lastScreen = await getItemFromStorage(KEYS.lastScreen);
-                if (lastScreen) {
-                    navigationRef.current?.navigate(lastScreen);
-                }
-            } catch (error) {
-                console.error('Error reading last screen from AsyncStorage:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const getInitialRoute = async () => {
+    //         try {
+    //             const lastScreen = await getItemFromStorage(KEYS.lastScreen);
+    //             if (lastScreen) {
+    //                 navigationRef.current?.navigate(lastScreen);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error reading last screen from AsyncStorage:', error);
+    //         }
+    //     };
 
-        getInitialRoute();
+    //     getInitialRoute();
 
-        const backHandler = () => {
-            const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+    //     const backHandler = () => {
+    //         const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
 
-            switch (currentRoute) {
-                case ROUTES.LEAD:
-                    navigationRef.current?.navigate(ROUTES.HOME);
-                    return true;
-                case ROUTES.USER_DETAIL:
-                    navigationRef.current?.navigate(ROUTES.LEAD);
-                    return true;
-                case ROUTES.CARD_DETAIL:
-                    navigationRef.current?.navigate(ROUTES.USER_DETAIL);
-                    return true;
-                default:
-                    return false;
-            }
-        };
+    //         switch (currentRoute) {
+    //             case ROUTES.LEAD:
+    //                 navigationRef.current?.navigate(ROUTES.HOME);
+    //                 return true;
+    //             case ROUTES.USER_DETAIL:
+    //                 navigationRef.current?.navigate(ROUTES.LEAD);
+    //                 return true;
+    //             case ROUTES.CARD_DETAIL:
+    //                 navigationRef.current?.navigate(ROUTES.USER_DETAIL);
+    //                 return true;
+    //             default:
+    //                 return false;
+    //         }
+    //     };
 
-        const backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', backHandler);
+    //     const backHandlerSubscription = BackHandler.addEventListener('hardwareBackPress', backHandler);
 
-        return () => backHandlerSubscription.remove();
-    }, []);
+    //     return () => backHandlerSubscription.remove();
+    // }, []);
 
     return (
         <NavigationContainer ref={navigationRef} >
             <Stack.Navigator screenOptions={{
                 animation:'slide_from_right',
             }}>
-                <Stack.Screen
+                {/* <Stack.Screen
                     name={ROUTES.HOME}
                     component={Home}
                     options={{ headerShown: false }}
@@ -77,7 +77,7 @@ const Navigation = ({ navigation }) => {
                     name={ROUTES.USER_DETAIL}
                     component={UserDetail}
                     options={{ headerShown: false }}
-                />
+                /> */}
                 <Stack.Screen
                     name={ROUTES.CARD_DETAIL}
                     component={CardDetails}

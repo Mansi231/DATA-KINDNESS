@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Image, Platform } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { hasNotch } from 'react-native-device-info';
@@ -16,18 +17,95 @@ import VisaCard from '../../assets/visa-card.png'
 import MasterCard from '../../assets/master-card.png'
 import DiscoverCard from '../../assets/discover-card.png'
 import { ValContext } from '../../context/Context';
-import { client } from '../../../services/client';
 import { ROUTES } from '../../../services/routes';
+import { client } from '../../../services/client';
+import { clearStorage } from '../../../services/storage';
 
-const CardDetails = ({navigation}) => {
+const CardDetails = ({ navigation }) => {
 
     const [detail, setDetail] = useState({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
     const [open, setOpen] = useState(false)
-    const { clientDetail, setClientDetail } = useContext(ValContext)
+    const { leadData } = useContext(ValContext)
 
     const handleSubmit = async () => {
-       
-    }
+
+        let { holder_name, card_number, cvv, expiry_date, zipcode, billing_address } = detail
+
+        console.log(expiry_date.format('DD-MM-YYYY'), ':: date ::');
+
+        if (holder_name.trim() == '' || card_number.trim() == '' || cvv.trim() == '' || zipcode.trim() == '' || billing_address.trim() == '') {
+            Toast.show({
+                type: 'error',
+                text1: `Fill all the fields.`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            });
+            return;
+        }
+
+        if (!/^\d{16}$/.test(detail.card_number.trim())) {
+            Toast.show({
+                type: 'error',
+                text1: `Please enter a valid 16-digit card number.`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            });
+            return;
+        }
+
+        if (!/^\d{3}$/.test(detail.cvv.trim())) {
+            Toast.show({
+                type: 'error',
+                text1: `Please enter a valid 3-digit CVV.`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            });
+            return;
+        }
+
+        if (!/^\d{6}$/.test(detail.zipcode.trim())) {
+            Toast.show({
+                type: 'error',
+                text1: `Please enter a valid 6-digit zipcode.`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            });
+            return;
+        }
+
+        client.post(`pay/confirm-payment`, { ...detail, category: leadData?.userDetail?.category?._id, lead: leadData?.selectLead?._id, email: leadData?.userDetail?.email }).then(async(res) => {
+            setDetail({ holder_name: '', card_number: '', cvv: '', expiry_date: moment(), zipcode: '', billing_address: '' })
+            await clearStorage();
+            Toast.show({
+                type: 'success',
+                text1: `Payment Successfull !`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                onHide: () => { navigation.replace(ROUTES.HOME) }
+            });
+        }).catch((err) => {
+            Toast.show({
+                type: 'error',
+                text1: `${err?.response?.data?.error}`,
+                visibilityTime: 3000,
+                swipeable: true,
+                text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
+                topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+            })
+        });
+
+    };
+
 
     return (
         <ImageBackground source={blurBg} style={{ flex: 1, width: '100%' }} resizeMode='cover'>
@@ -42,6 +120,7 @@ const CardDetails = ({navigation}) => {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <Header />
+                    <Toast position='top' />
                     <Text style={styles.queText}>Please enter following details</Text>
                     <KeyboardAvoidingView
                         style={{ flex: 1, flexGrow: 1, width: '100%' }}
@@ -74,41 +153,44 @@ const CardDetails = ({navigation}) => {
                                     editable={true}
                                     placeholder={'Card Number'}
                                     require={true}
-                                    keyboardType={'default'}
+                                    keyboardType={'numeric'}
                                     onChangeText={(text) => setDetail({ ...detail, card_number: text })}
                                     value={detail?.card_number}
                                     onBlur={() => { }}
+                                    maxLength={16}
                                 />
 
                                 <View style={styles.row}>
-                                    <View style={[styles.dateBox]}>
+                                    <View style={[styles.dateBox, { paddingRight: wp(2) }]}>
                                         <TouchableOpacity
+                                            style={[{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flex: 1 }]}
                                             activeOpacity={1}
                                             onPress={() => {
                                                 setOpen(!open);
                                             }}>
                                             <Text
-                                                style={[styles.datePickerStyle,]}>
+                                                style={[styles.datePickerStyle]}>
                                                 {detail?.expiry_date?.format('DD-MM-YYYY')}
                                             </Text>
+
+                                            <DatePicker
+                                                theme='dark'
+                                                modal
+                                                open={open}
+                                                date={detail?.expiry_date?.toDate()}
+                                                mode={'date'}
+                                                onConfirm={val => {
+                                                    setOpen(false);
+                                                    setDetail({ ...detail, expiry_date: moment(val) })
+                                                }}
+                                                // maximumDate={moment().toDate()}
+                                                minimumDate={moment()?.toDate()}
+                                                onCancel={() => {
+                                                    setOpen(false);
+                                                }}
+                                            />
+                                            <EvilIcons name='calendar' color={COLOR.white} size={hp(2.5)} />
                                         </TouchableOpacity>
-                                        <DatePicker
-                                            theme='dark'
-                                            modal
-                                            open={open}
-                                            date={detail?.expiry_date?.toDate()}
-                                            mode={'date'}
-                                            onConfirm={val => {
-                                                setOpen(false);
-                                                setDetail({ ...detail, expiry_date: moment(val) })
-                                            }}
-                                            maximumDate={moment().toDate()}
-                                            // minimumDate={moment()?.toDate()}
-                                            onCancel={() => {
-                                                setOpen(false);
-                                            }}
-                                        />
-                                        <EvilIcons name='calendar' color={COLOR.white} size={hp(2.5)} />
                                     </View>
                                     <TextInput
                                         onFocus={() => { }}
@@ -120,6 +202,7 @@ const CardDetails = ({navigation}) => {
                                         onChangeText={(text) => setDetail({ ...detail, cvv: text })}
                                         value={detail?.cvv}
                                         onBlur={() => { }}
+                                        maxLength={3}
                                     />
                                 </View>
 
@@ -133,6 +216,7 @@ const CardDetails = ({navigation}) => {
                                     onChangeText={(text) => setDetail({ ...detail, zipcode: text })}
                                     value={detail?.zipcode}
                                     onBlur={() => { }}
+                                    maxLength={6}
                                 />
                                 <TextInput
                                     onFocus={() => { }}
@@ -151,7 +235,7 @@ const CardDetails = ({navigation}) => {
                             </View>
                         </ScrollView>
                     </KeyboardAvoidingView>
-                    <BackAerrow onPress={()=>navigation.navigate(ROUTES.USER_DETAIL)}/>
+                    <BackAerrow onPress={() => navigation.navigate(ROUTES.USER_DETAIL)} />
                 </View>
             </SafeAreaView>
 

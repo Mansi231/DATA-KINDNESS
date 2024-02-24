@@ -16,4 +16,8 @@ const getItemFromStorage = async(key) =>{
    return JSON.parse(val)
 }
 
-export {getItemFromStorage,setItemToStorage,KEYS}
+const clearStorage = async() =>{
+    await AsyncStorage.clear()
+}
+
+export {getItemFromStorage,setItemToStorage,clearStorage,KEYS}

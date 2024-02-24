@@ -18,19 +18,26 @@ const Context = ({ children }) => {
     const [leadData, setLeadData] = useState(null)
     const [userDetail, setUserDetail] = useState(null)
 
-
     useEffect(() => {
         Promise.all([client.get('lead'), client.get('category'), getItemFromStorage(KEYS.screenData)])
             .then(([leadRes, categoryRes, screenData]) => {
                 setLeadList(leadRes?.data?.data || []);
                 setBusinessCategoryList(categoryRes?.data?.data || []);
-
                 setLeadData(screenData)
             })
             .catch((err) => {
                 console.log(err, ':: err ::');
             });
     }, [])
+
+    // useEffect(()=>{
+    //     const getItem = async () =>{
+    //         let data = await getItemFromStorage(KEYS.screenData)
+    //         if(data) setLeadData(data)
+    //     }
+
+    //     return ()=> getItem()
+    // },[])
 
 
     return (

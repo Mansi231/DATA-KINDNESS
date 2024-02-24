@@ -21,7 +21,7 @@ const TextInputCommon = ({
     source,
     style,
     autoCapitalize, textContentType,
-    editable, require, multiline, numberOfLines, placeholderContainerStyle
+    editable, require, multiline, numberOfLines, placeholderContainerStyle,maxLength
 }) => {
 
     const [isFocused, setIsFocused] = useState(false)
@@ -48,6 +48,7 @@ const TextInputCommon = ({
             numberOfLines={numberOfLines}
             textAlignVertical='center'
             placeholder={placeholder}
+            maxLength={maxLength}
             placeholderTextColor={COLOR.white}
         />
     );

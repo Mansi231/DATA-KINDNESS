@@ -5,7 +5,7 @@ import { hasNotch } from 'react-native-device-info';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
 import { FONTS } from '../../utils/fontFamily'
-import blurBg from '../../assets/blur_bg.jpg'
+import blurBg from '../../assets/bg.png'
 import Header from '../../components/common/Header';
 import TextInput from '../../components/inputComp/TextInput';
 import Dropdown from '../../components/inputComp/DropDown';
@@ -13,7 +13,6 @@ import Button from '../../components/inputComp/Button';
 import BackAerrow from '../../components/common/BackAerrow';
 import { ValContext } from '../../context/Context';
 import { client } from '../../../services/client';
-import { CardField, useStripe, useConfirmPayment, initStripe } from '@stripe/stripe-react-native';
 import { ROUTES } from '../../../services/routes';
 import { KEYS, setItemToStorage } from '../../../services/storage';
 
@@ -73,7 +72,7 @@ const UserDetail = ({ navigation }) => {
             <StatusBar translucent barStyle={'light-content'} backgroundColor={'transparent'} />
             <View
                 style={{
-                    height: hasNotch() ? hp(6) : 0,
+                    height: hasNotch() ? hp(6) : Platform?.OS == 'android'? StatusBar?.currentHeight : hp(3),
                     backgroundColor: 'transparent',
                     width: '100%',
                 }}
@@ -125,6 +124,7 @@ const UserDetail = ({ navigation }) => {
                                     onChangeText={(text) => setLeadData({...leadData,userDetail:{ ...detail, number: text }})}
                                     value={detail?.number}
                                     onBlur={() => { }}
+                                    maxLength={10}
                                 />
                                 <TextInput
                                     onFocus={() => { }}

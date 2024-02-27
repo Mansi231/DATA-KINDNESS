@@ -5,7 +5,7 @@ import { hasNotch } from 'react-native-device-info';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
 import { FONTS } from '../../utils/fontFamily'
-import blurBg from '../../assets/blur_bg.jpg'
+import blurBg from '../../assets/bg.png'
 import Header from '../../components/common/Header';
 import TextInput from '../../components/inputComp/TextInput';
 import Button from '../../components/inputComp/Button';
@@ -91,7 +91,9 @@ const CardDetails = ({ navigation }) => {
                 swipeable: true,
                 text1Style: { fontFamily: FONTS.NunitoMedium, fontSize: hp(1.3), color: COLOR.black, letterSpacing: wp(.1) },
                 topOffset: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-                onHide: () => { navigation.replace(ROUTES.HOME) }
+                onHide: () => { 
+                    navigation.reset({index:0,routes:[{name:ROUTES.HOME}]})
+                 }
             });
         }).catch((err) => {
             Toast.show({
@@ -112,7 +114,7 @@ const CardDetails = ({ navigation }) => {
             <StatusBar translucent barStyle={'light-content'} backgroundColor={'transparent'} />
             <View
                 style={{
-                    height: hasNotch() ? hp(5) : hp(3),
+                    height: hasNotch() ? hp(6) : Platform?.OS == 'android'? StatusBar?.currentHeight : hp(3),
                     backgroundColor: 'transparent',
                     width: '100%',
                 }}

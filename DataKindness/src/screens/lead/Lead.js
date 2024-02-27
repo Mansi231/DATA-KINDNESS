@@ -3,7 +3,7 @@ import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, View, ScrollVie
 import React, { useContext, useEffect, useState } from 'react'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from '../../../pixel'
 import { COLOR } from '../../utils/color'
-import blurBg from '../../assets/blur_bg.jpg'
+import blurBg from '../../assets/bg.png'
 import logo from '../../assets/logo_transparent.png'
 import { hasNotch } from 'react-native-device-info';
 import { FONTS } from '../../utils/fontFamily'
@@ -48,7 +48,7 @@ const Lead = ({ navigation }) => {
     <ImageBackground source={blurBg} style={{ flex: 1, width: '100%' }} resizeMode='cover'>
       <View
         style={{
-          height: hasNotch() ? hp(6) : 0,
+          height: hasNotch() ? hp(6) : Platform?.OS == 'android' ? StatusBar?.currentHeight : hp(3),
           backgroundColor: 'transparent',
           width: '100%',
         }}

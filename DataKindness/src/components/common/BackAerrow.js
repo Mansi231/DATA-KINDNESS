@@ -12,4 +12,6 @@ const BackAerrow = ({onPress}) => {
 
 export default BackAerrow
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    
+})

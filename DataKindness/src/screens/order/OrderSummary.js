@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ImageBackground, StatusBar, SafeAreaView, KeyboardAvoidingView, ScrollView ,Platform} from 'react-native'
 import React from 'react'
-import blurBg from '../../assets/blur_bg.jpg'
+import blurBg from '../../assets/bg.png'
 import { hasNotch } from 'react-native-device-info';
 import Header from '../../components/common/Header';
 import { FONTS } from '../../utils/fontFamily';
@@ -16,7 +16,7 @@ const OrderSummary = () => {
             <StatusBar translucent barStyle={'light-content'} backgroundColor={'transparent'} />
             <View
                 style={{
-                    height: hasNotch() ? hp(6) : 0,
+                    height: hasNotch() ? hp(6) : Platform?.OS == 'android'? StatusBar?.currentHeight : hp(3),
                     backgroundColor: 'transparent',
                     width: '100%',
                 }}

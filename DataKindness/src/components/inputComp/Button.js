@@ -20,7 +20,7 @@ const Button = ({ text, style, onPress }) => {
         onPress={onPress}
         buttonColor={COLOR.white}
         textColor={COLOR.black}
-        labelStyle={{  fontSize: hp(1.9) ,paddingVertical:hp(1.5),paddingBottom:hp(.5),paddingHorizontal:wp(8)}}
+        labelStyle={{  fontSize: hp(1.9) ,paddingVertical:hp(.5),paddingBottom:hp(.5),paddingHorizontal:wp(8)}}
         contentStyle={{ height: '100%' }}
       >
         {text}

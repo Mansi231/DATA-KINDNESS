@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
         borderColor: COLOR.borderGrey,
         height: hp(6.4)
     },
-    optionTextBox: { backgroundColor: COLOR.black30, paddingHorizontal: wp(3), height: hp(5.3), flexGrow: 1, justifyContent: 'center' },
-    downArrowBtn: { backgroundColor: COLOR.white, paddingHorizontal: wp(3.2), height: hp(5.3), justifyContent: 'center' },
+    optionTextBox: { backgroundColor: COLOR.black30, paddingHorizontal: wp(3), height: hp(6.2), flexGrow: 1, justifyContent: 'center' },
+    downArrowBtn: { backgroundColor: COLOR.white, width:wp(13), height: hp(6.2), justifyContent: 'center' ,alignItems:'center'},
     dropdownContainer: {
         maxHeight: hp(20), // Set the maximum height for the dropdown container
         borderColor: COLOR.borderGrey,
